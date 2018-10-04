@@ -14,6 +14,8 @@ digraph {
 
 # 
 
+[Node shapes](https://graphviz.gitlab.io/_pages/doc/info/shapes.html)
+
 ``` dot
 digraph {
   node[shape=circle label=""];
@@ -126,6 +128,11 @@ graph {
 
 ![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
+# 
+
+[Graph, Node, Edge
+attrs](https://graphviz.gitlab.io/_pages/doc/info/attrs.html)
+
 ``` dot
 digraph {
   rankdir=LR;
@@ -138,6 +145,8 @@ digraph {
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+# 
 
 [James’s sklearn
 talk](https://jrbourbeau.github.io/madpy-ml-sklearn-2018/#/0/24)
@@ -160,4 +169,31 @@ def plot_decision_tree(model: DecisionTreeClassifier):
                                special_characters=True)
     graph = graphviz.Source(dot_data)
     return graph
+```
+
+# 
+
+[Visualizing Wikipedia article revision
+history](https://github.com/evoapps/wikivision/blob/master/notebooks/visualizing-article-histories.ipynb),
+[graph
+function](https://github.com/evoapps/wikivision/blob/master/wikivision/view.py#L21)
+
+``` dot
+def graph(edges, nodes=None, remove_labels=False):
+    """Create a revision history Digraph from a pandas DataFrame."""
+    g = graphviz.Digraph(graph_attr={'rankdir': 'LR'})
+
+    if nodes is None:
+        labels = set(edges.iloc[:, 0]).union(set(edges.iloc[:, 1]))
+        nodes = pd.DataFrame({'name': list(labels), 'label': list(labels)})
+
+    node_data = nodes.to_dict('index')
+    for _, attrs in node_data.items():
+        if remove_labels:
+            attrs['label'] = ''
+        g.node(**attrs)
+
+    g.edges([(from_node, to_node) for _, (from_node, to_node) in edges.iterrows()])
+
+    return g
 ```
